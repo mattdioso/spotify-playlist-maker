@@ -6,7 +6,7 @@ The script uses your specific Spotify credentials (obtained through SSO) to dete
 ### Prerequisites
     * Python3
 
-    ```pip install: ```
+    pip install: 
     * requests
     * os
     * json
@@ -27,7 +27,7 @@ Save these three values in the following files:
 
 To run the script:
 
-    ```./spotify-playlist.py```
+    ./spotify-playlist.py
 
 ## Contact
 Matt Dioso - dioso.matt@gmail.com
