@@ -143,9 +143,10 @@ def get_playlist_tracks(access_token, playlist_id):
 def filter_top_tracks(existing_tracks, top_tracks):
   filtered_tracks = []
   for item in top_tracks:
-    filtered = filter(lambda track: track['id'] == item.split("\t")[0], existing_tracks)
+    filtered = filter(lambda track: track['track']['id'] == item.split("\t")[0], existing_tracks)
     if len(list(filtered)) == 0:
       filtered_tracks.append("spotify:track:" + item.split("\t")[0])
+      print("adding " + str(item.split("\t")[1]))
   return filtered_tracks
 
 def update_playlist(playlist_id, tracks, access_token):
@@ -158,7 +159,7 @@ def update_playlist(playlist_id, tracks, access_token):
     'uris': tracks
   }
 
-  response = requests.put(url.replace("<PLAYLIST>", playlist_id), headers=headers,data=json.dumps(data))
+  response = requests.post(url.replace("<PLAYLIST>", playlist_id), headers=headers,data=json.dumps(data))
   if response.status_code == 200:
     return response.json()['snapshot_id']
   else:
@@ -208,6 +209,9 @@ else:
 top_tracks = get_recent_top_tracks(access_token)
 existing_tracks = get_playlist_tracks(access_token, playlist_id)
 deltas = filter_top_tracks(existing_tracks, top_tracks)
-snapshot_id = update_playlist(playlist_id, deltas, access_token)
-print(snapshot_id)
+if not deltas:
+  print("nothing to update today")
+else:
+  snapshot_id = update_playlist(playlist_id, deltas, access_token)
+  print(snapshot_id)
 print("done")
